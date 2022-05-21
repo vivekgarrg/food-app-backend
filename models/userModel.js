@@ -32,13 +32,21 @@ const userSchema = mongoose.Schema({
         required:true,
         minLength: 8
     },
-    cpassowrd:{
+    cpassword:{
         type:String,
         required:true,
         minLength: 8,
         validate: function(){
-            this.cpassowrd===this.password
+            this.cpassword===this.password
         }
+    },
+    role:{
+        type: String,
+        enum:['admin', 'user', 'restaurantowner', 'deliverybiy']
+    },
+    profileImage:{
+        type: String,
+        default: 'img/users/default.png'
     }
 });
 
@@ -46,7 +54,7 @@ const userSchema = mongoose.Schema({
 //mongo hooks ---->
 
 userSchema.pre('save', function(){
-    this.cpassowrd = undefined;
+    this.cpassword = undefined;
 })
 
 //encrypting passowrd

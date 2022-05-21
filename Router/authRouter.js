@@ -1,6 +1,9 @@
 const express = require('express')
 const authRouter = express.Router();
 const userModel = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+
+const JWT_KEY = require('./secrets')
 
 authRouter
     .route('/signup')
@@ -41,6 +44,10 @@ async function loginUser(req, res) {
         })
         if (user) {
             if (user.password === data.password) {
+                
+                let uid = user['_id'];
+                let token = jwt.sign({payload:uid}, JWT_KEY);
+                res.cookie("isLogIn", token);
                 res.status(400).send("Welcome User")
             } else {
                 res.send("Credentials are wrong")
