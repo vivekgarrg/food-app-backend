@@ -8,10 +8,8 @@ app.listen(3000);
 
 
 const userRouter = require('./Router/userRouter')
-const authRouter = require('./Router/authRouter')
 app.use(cookieParser())
-app.use('/users',userRouter) //global middleware function
-app.use('/auth',authRouter)
+app.use('/users',userRouter)
 
 
 

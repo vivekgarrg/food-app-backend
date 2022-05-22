@@ -1,6 +1,7 @@
 const mongoose  = require('mongoose');
 const emailValidator  = require('email-validator')
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
  
 const db_link = "mongodb+srv://admin:6EiTkZzKKqRdnxna@cluster0.sabdy.mongodb.net/?retryWrites=true&w=majority"
 
@@ -42,12 +43,14 @@ const userSchema = mongoose.Schema({
     },
     role:{
         type: String,
-        enum:['admin', 'user', 'restaurantowner', 'deliverybiy']
+        enum:['admin', 'user', 'restaurantowner', 'deliverybiy'],
+        default:'user'
     },
     profileImage:{
         type: String,
         default: 'img/users/default.png'
-    }
+    },
+    resetToken : String
 });
 
 
@@ -74,6 +77,17 @@ userSchema.pre('save', function(){
 //     console.log("after saving into db", doc);
 // })
 
+userSchema.methods.createResetToken = function(){
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    this.resetToken = resetToken;
+    return resetToken;
+}
+
+userSchema.methods.resetPasswordHandler = function(password, cpassword){
+    this.password = password;
+    this.cpassword = cpassword;
+    this.resetToken = undefined;
+}
 //model--->
 const userModel = mongoose.model('userModel', userSchema);
 

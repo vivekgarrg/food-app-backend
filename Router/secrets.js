@@ -1,1 +1,0 @@
-module.exports = JWT_KEY = "jbfru87ryfvbfjkbv";
